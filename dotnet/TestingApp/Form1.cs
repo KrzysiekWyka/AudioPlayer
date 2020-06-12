@@ -35,5 +35,10 @@ namespace TestingApp
                 playerControl.FilePath = fileDialog.FileName;
             }
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            MinimumSize = new Size(Width, Height);
+        }
     }
 }

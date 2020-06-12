@@ -116,7 +116,8 @@ namespace AudioPlayer
             
             _player.PlayStateChange += Player_PlayStateChange;
             _player.MediaError += Player_MediaError;
-            //_player.settings.volume =
+
+            ResizeControl();
         }
 
         private void playBtn_Click(object sender, EventArgs e)
@@ -165,6 +166,18 @@ namespace AudioPlayer
             {
                 PlayFile(openFileDialog1.FileName);
             }
+        }
+
+        private void ResizeControl()
+        {
+            infoLbl.Font = new Font(infoLbl.Font.FontFamily, Height / 8);
+            playBtn.Font = new Font(playBtn.Font.FontFamily, Height / 4);
+            pauseBtn.Font = new Font(pauseBtn.Font.FontFamily, Height / 4);
+        }
+
+        private void PlayerControl_Resize(object sender, EventArgs e)
+        {
+            ResizeControl();
         }
     }
 }
