@@ -19,7 +19,6 @@ namespace AudioPlayer
         private Color _pauseBtnColor = DefaultBackColor;
         private string _playBtnText = "Play";
         private string _pauseBtnText = "Pause";
-        private int _volumeLevel = 100;
         private Color _labelColor = DefaultForeColor;
 
         #region Custom properties
@@ -84,18 +83,6 @@ namespace AudioPlayer
         }
 
         [Category("PlayerProperties")]
-        public int VolumeLevel
-        {
-            get => _volumeLevel;
-            set
-            {
-                _volumeLevel = value;
-
-                _player.settings.volume = value;
-            }
-        }
-
-        [Category("PlayerProperties")]
         public Color LabelColor
         {
             get => _labelColor;
@@ -113,11 +100,18 @@ namespace AudioPlayer
         public PlayerControl()
         {
             InitializeComponent();
+
+            _player.settings.volume = trackBar1.Value;
+
+            trackBar1.ValueChanged += TrackBar1_ValueChanged;
             
             _player.PlayStateChange += Player_PlayStateChange;
             _player.MediaError += Player_MediaError;
+        }
 
-            ResizeControl();
+        private void TrackBar1_ValueChanged(object sender, EventArgs e)
+        {
+            _player.settings.volume = trackBar1.Value;
         }
 
         private void playBtn_Click(object sender, EventArgs e)
@@ -151,7 +145,6 @@ namespace AudioPlayer
         private void Player_MediaError(object pMediaObject)
         {
             MessageBox.Show("Cannot play media file.");
-            //this.Close();
         }
 
 
@@ -168,16 +161,37 @@ namespace AudioPlayer
             }
         }
 
-        private void ResizeControl()
+        public static float NewFontSize(Graphics graphics, Size size, Font font, string str)
         {
-            infoLbl.Font = new Font(infoLbl.Font.FontFamily, Height / 8);
-            playBtn.Font = new Font(playBtn.Font.FontFamily, Height / 4);
-            pauseBtn.Font = new Font(pauseBtn.Font.FontFamily, Height / 4);
+            SizeF stringSize = graphics.MeasureString(str, font);
+            float wRatio = size.Width / stringSize.Width;
+            float hRatio = size.Height / stringSize.Height;
+            float ratio = Math.Min(hRatio, wRatio);
+            return (font.Size * ratio) - ((float)0.2 * (font.Size * ratio));
         }
 
-        private void PlayerControl_Resize(object sender, EventArgs e)
+        private void playBtn_Paint(object sender, PaintEventArgs e)
         {
-            ResizeControl();
+            float fontSize = NewFontSize(e.Graphics, playBtn.Size, playBtn.Font, playBtn.Text);
+            
+            Font f = new Font("Arial", fontSize, FontStyle.Bold);
+            playBtn.Font = f;
+        }
+
+        private void pauseBtn_Paint(object sender, PaintEventArgs e)
+        {
+            float fontSize = NewFontSize(e.Graphics, pauseBtn.Size, pauseBtn.Font, pauseBtn.Text);
+
+            Font f = new Font("Arial", fontSize, FontStyle.Bold);
+            pauseBtn.Font = f;
+        }
+
+        private void infoLbl_Paint(object sender, PaintEventArgs e)
+        {
+            float fontSize = NewFontSize(e.Graphics, infoLbl.Size, infoLbl.Font, infoLbl.Text);
+
+            Font f = new Font("Arial", fontSize, FontStyle.Bold);
+            infoLbl.Font = f;
         }
     }
 }

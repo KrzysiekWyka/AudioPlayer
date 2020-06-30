@@ -15,15 +15,6 @@ namespace TestingApp
         public Form1()
         {
             InitializeComponent();
-
-            volumeLevel.Value = 80;
-
-            volumeLevel.ValueChanged += VolumeLevel_ValueChanged;
-        }
-
-        private void VolumeLevel_ValueChanged(object sender, EventArgs e)
-        {
-            playerControl.VolumeLevel = volumeLevel.Value;
         }
 
         private void loadFileBtn_Click(object sender, EventArgs e)
@@ -36,9 +27,12 @@ namespace TestingApp
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e) {
+        }
+
+        private void playerControl_Load(object sender, EventArgs e)
         {
-            MinimumSize = new Size(Width, Height);
+
         }
     }
 }
